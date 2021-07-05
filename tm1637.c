@@ -31,12 +31,12 @@ void tm1637_start(tm1637_t *tm1637)
 //#######################################################################################################################
 void tm1637_stop(tm1637_t *tm1637)
 {
-	HAL_GPIO_WritePin(tm1637->gpio_dat, tm1637->pin_dat, GPIO_PIN_RESET);
-	tm1637_delay_us(_TM1637_BIT_DELAY);
-	HAL_GPIO_WritePin(tm1637->gpio_clk, tm1637->pin_clk, GPIO_PIN_SET);
-	tm1637_delay_us(_TM1637_BIT_DELAY);
-	HAL_GPIO_WritePin(tm1637->gpio_dat, tm1637->pin_dat, GPIO_PIN_SET);
-	tm1637_delay_us(_TM1637_BIT_DELAY);
+  HAL_GPIO_WritePin(tm1637->gpio_dat, tm1637->pin_dat, GPIO_PIN_RESET);
+  tm1637_delay_us(_TM1637_BIT_DELAY);
+  HAL_GPIO_WritePin(tm1637->gpio_clk, tm1637->pin_clk, GPIO_PIN_SET);
+  tm1637_delay_us(_TM1637_BIT_DELAY);
+  HAL_GPIO_WritePin(tm1637->gpio_dat, tm1637->pin_dat, GPIO_PIN_SET);
+  tm1637_delay_us(_TM1637_BIT_DELAY);
 }
 //#######################################################################################################################
 uint8_t tm1637_write_byte(tm1637_t *tm1637, uint8_t data)
@@ -108,20 +108,20 @@ void tm1637_write_segment(tm1637_t *tm1637, const uint8_t *segments, uint8_t len
 {
   tm1637_lock(tm1637);
   // write COMM1
-	tm1637_start(tm1637);
-	tm1637_write_byte(tm1637, TM1637_COMM1);
-	tm1637_stop(tm1637);
-	// write COMM2 + first digit address
-	tm1637_start(tm1637);
-	tm1637_write_byte(tm1637, TM1637_COMM2 + (pos & 0x03));
-	// write the data bytes
-	for (uint8_t k=0; k < length; k++)
-	  tm1637_write_byte(tm1637, segments[k]);
-	tm1637_stop(tm1637);
-	// write COMM3 + brightness
-	tm1637_start(tm1637);
-	tm1637_write_byte(tm1637, TM1637_COMM3 + tm1637->brightness);
-	tm1637_stop(tm1637);
+  tm1637_start(tm1637);
+  tm1637_write_byte(tm1637, TM1637_COMM1);
+  tm1637_stop(tm1637);
+  // write COMM2 + first digit address
+  tm1637_start(tm1637);
+  tm1637_write_byte(tm1637, TM1637_COMM2 + (pos & 0x03));
+  // write the data bytes
+  for (uint8_t k=0; k < length; k++)
+    tm1637_write_byte(tm1637, segments[k]);
+  tm1637_stop(tm1637);
+  // write COMM3 + brightness
+  tm1637_start(tm1637);
+  tm1637_write_byte(tm1637, TM1637_COMM3 + tm1637->brightness);
+  tm1637_stop(tm1637);
   tm1637_unlock(tm1637);
 }
 //#######################################################################################################################
