@@ -7,7 +7,28 @@
 
 How to use this Library:
 * Put all files into your project.
-* Set your Configuration in "tm1637_config.h".
+* Set your Configuration in `tm1637_config.h`.
 * Select 2 pins on cubemx as gpio open drain.
-* Create a strcuture "tm1637_t your_struct".
-* Call "tm1637_init()".
+* Create a strcuture `tm1637_t your_struct`.
+* Call `tm1637_init()`.
+
+example:
+
+```
+#include "tm1637.h"
+tm1637_t disp;
+
+const uint8_t seg_LOAD[4] =  {0x38, 0x5c, 0x77, 0x5e};
+.
+.
+.
+int main()
+{
+  .
+  .
+  .
+  tm1637_init(&disp, CLK1_GPIO_Port, CLK1_Pin, DIO1_GPIO_Port, DIO1_Pin);
+  tm1637_write_segment(&disp, seg_LOAD, 4, 0);
+}
+
+```
