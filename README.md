@@ -18,7 +18,7 @@ example:
 #include "tm1637.h"
 tm1637_t disp;
 
-const uint8_t seg_LOAD[4] =  {0x38, 0x5c, 0x77, 0x5e};
+const uint8_t seg_LOAD[4] =  {0x38, 0x5c, 0x77, 0x5e}; // display LOAD
 .
 .
 .
