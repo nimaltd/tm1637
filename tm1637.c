@@ -2,6 +2,7 @@
 #include "tm1637.h"
 #include "tm1637_config.h"
 #include <string.h>
+#include <stdio.h>
 
 #if _TM1637_FREERTOS == 0
 #define tm1637_delay_ms(x)  HAL_Delay(x)
@@ -13,6 +14,11 @@
 #define TM1637_COMM1    0x40
 #define TM1637_COMM2    0xC0
 #define TM1637_COMM3    0x80
+
+const uint8_t _tm1637_digit[] =
+  {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f};
+const uint8_t _tm1637_minus = 0x40;
+const uint8_t _tm1637_dot = 0x80;  
 //#######################################################################################################################
 void tm1637_delay_us(uint8_t delay)
 {
@@ -104,9 +110,19 @@ void tm1637_init(tm1637_t *tm1637, GPIO_TypeDef *gpio_clk, uint16_t pin_clk, GPI
   tm1637_unlock(tm1637);
 }
 //#######################################################################################################################
-void tm1637_write_segment(tm1637_t *tm1637, const uint8_t *segments, uint8_t length, uint8_t pos)
+void tm1637_brightness(tm1637_t *tm1637, uint8_t brightness_0_to_7)
 {
   tm1637_lock(tm1637);
+  tm1637->brightness = (brightness_0_to_7 & 0x7) | 0x08;
+  tm1637_unlock(tm1637);
+}
+//#######################################################################################################################
+void tm1637_write_raw(tm1637_t *tm1637, const uint8_t *raw, uint8_t length, uint8_t pos)
+{
+  if (pos > 5)
+    return;
+  if (length > 6)
+    length = 6;
   // write COMM1
   tm1637_start(tm1637);
   tm1637_write_byte(tm1637, TM1637_COMM1);
@@ -116,23 +132,102 @@ void tm1637_write_segment(tm1637_t *tm1637, const uint8_t *segments, uint8_t len
   tm1637_write_byte(tm1637, TM1637_COMM2 + (pos & 0x03));
   // write the data bytes
   for (uint8_t k=0; k < length; k++)
-    tm1637_write_byte(tm1637, segments[k]);
+    tm1637_write_byte(tm1637, raw[k]);
   tm1637_stop(tm1637);
   // write COMM3 + brightness
   tm1637_start(tm1637);
   tm1637_write_byte(tm1637, TM1637_COMM3 + tm1637->brightness);
   tm1637_stop(tm1637);
-  tm1637_unlock(tm1637);
 }
 //#######################################################################################################################
-void tm1637_brightness(tm1637_t *tm1637, uint8_t brightness_0_to_7)
+void tm1637_write_segment(tm1637_t *tm1637, const uint8_t *segments, uint8_t length, uint8_t pos)
 {
   tm1637_lock(tm1637);
-  tm1637->brightness = (brightness_0_to_7 & 0x7) | 0x08;
-  tm1637_unlock(tm1637);
+  tm1637_write_raw(tm1637, segments, length, pos);
+  tm1637_unlock(tm1637);  
 }
 //#######################################################################################################################
-
+void tm1637_write_int(tm1637_t *tm1637, int32_t digit, uint8_t pos)
+{
+  tm1637_lock(tm1637);
+  char str[7];
+  uint8_t buffer[6] = {0};
+  snprintf(str, sizeof(str) , "%d", digit);
+  for (uint8_t i=0; i < 6; i++)
+  {
+    if (str[i] == '-')
+      buffer[i] = _tm1637_minus;
+    else if((str[i] >= '0') && (str[i] <= '9'))
+      buffer[i] = _tm1637_digit[str[i] - 48];
+    else
+    {
+      buffer[i] = 0;
+      break;
+    }
+  }
+  tm1637_write_raw(tm1637, buffer, 6, pos);              
+  tm1637_unlock(tm1637);  
+}
+//#######################################################################################################################
+void tm1637_write_float(tm1637_t *tm1637, float digit, uint8_t floating_digit, uint8_t pos)
+{
+  tm1637_lock(tm1637);
+  char str[8];
+  uint8_t buffer[6] = {0};
+  if (floating_digit >6)
+    floating_digit = 6;
+  switch (floating_digit)
+  {
+    case 0:
+      snprintf(str, sizeof(str) , "%.0f", digit);
+    break;
+    case 1:
+      snprintf(str, sizeof(str) , "%.1f", digit);
+    break;
+    case 2:
+      snprintf(str, sizeof(str) , "%.2f", digit);
+    break;
+    case 3:
+      snprintf(str, sizeof(str) , "%.3f", digit);
+    break;
+    case 4:
+      snprintf(str, sizeof(str) , "%.4f", digit);
+    break;
+    case 5:
+      snprintf(str, sizeof(str) , "%.5f", digit);
+    break;
+    case 6:
+      snprintf(str, sizeof(str) , "%.6f", digit);
+    break;
+  } 
+  uint8_t index = 0;  
+  for (uint8_t i=0; i < 7; i++)
+  {
+    if (str[i] == '-')
+    {
+      buffer[index] = _tm1637_minus;
+      index++;
+    }
+    else if((str[i] >= '0') && (str[i] <= '9'))
+    {
+      buffer[index] = _tm1637_digit[str[i] - 48];
+      index++;
+    }
+    else if (str[i] == '.')
+    {
+      if (index > 0)
+        buffer[index - 1] |= _tm1637_dot;      
+    }
+    else
+    {
+      buffer[index] = 0;
+      break;
+    }
+  }
+  tm1637_write_raw(tm1637, buffer, 6, pos);              
+  tm1637_unlock(tm1637);  
+}
+//#######################################################################################################################
 
 
 
