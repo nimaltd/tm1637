@@ -29,6 +29,10 @@ int main()
   .
   tm1637_init(&disp, CLK1_GPIO_Port, CLK1_Pin, DIO1_GPIO_Port, DIO1_Pin);
   tm1637_write_segment(&disp, seg_LOAD, 4, 0);
+  HAL_Delay(1000);
+  tm1637_write_float(&disp, -1.23, 2, 0);
+  HAL_Delay(1000);
+  tm1637_write_int(&disp, 56, 0);
 }
 
 ```
