@@ -20,8 +20,14 @@
  * 
  * */
  
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
 #include <stdint.h>
 #include "main.h"
+
+//####################################################################################################################
 
 typedef struct
 {
@@ -43,5 +49,9 @@ void tm1637_write_int(tm1637_t *tm1637, int32_t digit, uint8_t pos);
 void tm1637_write_float(tm1637_t *tm1637, float digit, uint8_t floating_digit, uint8_t pos);
 
 //####################################################################################################################
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
