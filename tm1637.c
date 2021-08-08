@@ -200,6 +200,16 @@ void tm1637_write_float(tm1637_t *tm1637, float digit, uint8_t floating_digit, u
       snprintf(str, sizeof(str) , "%.6f", digit);
     break;
   } 
+  if (tm1637->show_zero == false)
+  {
+    for (int8_t i = strlen(str) - 1; i > 0; i--)
+    {
+      if (str[i] == '0')
+        str[i] = 0;
+      else
+        break;            
+    }
+  }
   uint8_t index = 0;  
   for (uint8_t i=0; i < 7; i++)
   {
@@ -228,8 +238,11 @@ void tm1637_write_float(tm1637_t *tm1637, float digit, uint8_t floating_digit, u
   tm1637_unlock(tm1637);  
 }
 //#######################################################################################################################
-
-
+void tm1637_show_zero(tm1637_t *tm1637, bool enable)
+{
+  tm1637->show_zero = enable;
+}
+//#######################################################################################################################
 
 
 
