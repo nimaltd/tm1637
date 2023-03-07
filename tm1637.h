@@ -11,10 +11,11 @@
  */
 
 /*
- * Version:	1.1.1
+ * Version:	1.1.2
  *
  * History:
  *
+ * (1.1.2):	Add Fill segments
  * (1.1.1): Add tm1637_show_zero(), show or hide lower zero in tm1637_show_float() function.
  * (1.1.0): Add tm1637_write_int() and tm1637_write_float() functions.
  * (1.0.0): First release.
@@ -51,7 +52,7 @@ void tm1637_write_segment(tm1637_t *tm1637, const uint8_t *segments, uint8_t len
 void tm1637_write_int(tm1637_t *tm1637, int32_t digit, uint8_t pos);
 void tm1637_write_float(tm1637_t *tm1637, float digit, uint8_t floating_digit, uint8_t pos);
 void tm1637_show_zero(tm1637_t *tm1637, bool enable);
-
+void tm1637_fill(tm1637_t *tm1637, bool enable);
 //####################################################################################################################
 
 #ifdef __cplusplus
