@@ -1,30 +1,66 @@
-# SPI FLASH Library for STM32  
----  
-## Please Do not Forget to get STAR, DONATE and support me on social networks. Thank you. :sparkling_heart:  
----   
--  Author:     Nima Askari  
--  Github:     https://www.github.com/NimaLTD
--  Youtube:    https://www.youtube.com/@nimaltd  
--  LinkedIn:   https://www.linkedin.com/in/nimaltd  
--  Instagram:  https://instagram.com/github.NimaLTD  
----  
-- I have tested on w25q64. please test other devices and tell me.
----
-* Install Library from https://github.com/nimaltd/STM32-PACK/raw/main/SPIF/NimaLTD.I-CUBE-SPIF.pdsc
-* Add and enable it.
-* Enable SPI and a GPIO as output-pushpull (CS pin).Connect WP and HOLD to VCC.
-* Select 'Generate peripheral initialization as a pair of .c/.h files per peripheral' on the Code Generator Tab.
-* Generate Code.
-* Define a structure of `SPIF_HandleTypeDef`.
-* Call `SPIF_Init()` and enjoy.
----
-# Watch the Video:
+# TM1637 7-Segment Display Driver
 
-<div align="center">
-  <a href="https://www.youtube.com/watch?v=_baNId6cDi4"><img src="https://img.youtube.com/vi/_baNId6cDi4/0.jpg" alt="Video"></a>
-</div>
+## Author & License
+
+- **Author:** Nima Askari  
+- **Version:** 2.0.0  
+- **License:** See the [`LICENSE`](LICENSE) file in the root folder.  
 
 ---
-The old Version: https://github.com/nimaltd/SPIF/archive/refs/tags/1.20.0.zip 
 
+### Connect with Me, Support Me  
 
+- [![YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge&logo=youtube)](https://youtube.com/@nimaltd)  
+- [![Instagram](https://img.shields.io/badge/Instagram-Follow-blue?style=for-the-badge&logo=instagram)](https://instagram.com/github.nimaltd)  
+- [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/nimaltd)  
+- [![Email](https://img.shields.io/badge/Email-Contact-red?style=for-the-badge&logo=gmail)](mailto:nima.askari@gmail.com)  
+- [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support-orange?style=for-the-badge&logo=ko-fi)](https://ko-fi.com/nimaltd)  
+
+© 2025 Nima Askari - NimaLTD. All rights reserved.  
+
+---
+
+## TM1637 7-Segment Display Driver Help  
+
+### Pin Connections  
+
+| Display Segment | TM1637 Pin |
+|----------------|-----------|
+| A             | SEG1      |
+| B             | SEG2      |
+| C             | SEG3      |
+| D             | SEG4      |
+| E             | SEG5      |
+| F             | SEG6      |
+| G             | SEG7      |
+| . (Dot)       | SEG8      |
+
+---
+
+## STM32CubeMX Configuration  
+
+Set **CLK (Clock)** and **DIO (Data I/O)** pins as:  
+- **Mode:** Output Open Drain  
+- **Select:** High-level initialization  
+
+---
+
+## Usage  
+
+### 1. Declare a Display Instance  
+Create an instance for each display:  
+
+```c
+tm1637_t seg = 
+{
+    .seg_cnt = 4,
+    .gpio_clk = GPIOA,
+    .gpio_dat = GPIOA,
+    .pin_clk = GPIO_PIN_1,
+    .pin_data = GPIO_PIN_2,
+};
+.
+.
+.
+tm1637_init(&seg);
+```
