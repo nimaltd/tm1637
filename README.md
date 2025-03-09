@@ -4,7 +4,7 @@
 
 - **Author:** Nima Askari  
 - **Version:** 2.0.0  
-- **License:** See the [`LICENSE`](./LICENSE.txt) file in the root folder.  
+- **License:** See the [`LICENSE`](LICENSE.txt) file in the root folder.  
 
 ---
 
@@ -59,3 +59,8 @@ tm1637_t seg =
     .pin_clk = GPIO_PIN_1,
     .pin_data = GPIO_PIN_2,
 };
+.
+.
+.
+tm1637_init(&seg);
+```
