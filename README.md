@@ -4,14 +4,14 @@
 
 - **Author:** Nima Askari  
 - **Version:** 2.0.0  
-- **License:** See the `LICENSE` file in the root folder.  
+- **License:** See the [`LICENSE`](./LICENSE) file in the root folder.  
 
-## Social & Contact
+## Social & Contact  
 
-- **GitHub:** [nimaltd](https://www.github.com/nimaltd)  
-- **LinkedIn:** [nimaltd](https://www.linkedin.com/in/nimaltd)  
-- **YouTube:** [@nimaltd](https://www.youtube.com/@nimaltd)  
-- **Instagram:** [nimaltd](https://instagram.com/nimaltd)  
+[![GitHub](https://img.shields.io/badge/GitHub-000?logo=github&logoColor=white)](https://www.github.com/nimaltd)  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/nimaltd)  
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/@nimaltd)  
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?logo=instagram&logoColor=white)](https://instagram.com/github.nimaltd)  
 
 © 2025 Nima Askari - NimaLTD. All rights reserved.  
 
@@ -56,5 +56,3 @@ tm1637_t seg =
     .pin_clk = GPIO_PIN_1,
     .pin_data = GPIO_PIN_2,
 };
-
-
