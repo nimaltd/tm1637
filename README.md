@@ -4,7 +4,7 @@
 
 - **Author:** Nima Askari  
 - **Version:** 2.0.0  
-- **License:** See the [`LICENSE`](LICENSE.txt) file in the root folder.  
+- **License:** See the [`LICENSE`](LICENSE) file in the root folder.  
 
 ---
 
