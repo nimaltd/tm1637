@@ -63,5 +63,5 @@ tm1637_t seg =
 .
 .
 tm1637_init(&seg);
-tm1637_disp_string(&seg, "1234");
+tm1637_disp_str(&seg, "1234");
 ```
