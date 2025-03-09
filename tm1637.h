@@ -70,6 +70,7 @@ extern "C" {
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "main.h"
 
 /*************************************************************************************************/
