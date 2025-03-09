@@ -1,0 +1,29 @@
+This software is dual-licensed: you can redistribute it and/or modify
+it under the terms of the GNU General Public License version 2 as
+published by the Free Software Foundation. For the terms of this
+license, see <http://www.gnu.org/licenses/>.
+
+You are free to use this software under the terms of the GNU General
+Public License, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+Alternatively, you can license this software under a commercial
+license. The commercial license removes all GPLv2 restrictions and allows
+you to redistribute your closed source products with the Library embedded.
+This license provides access to software maintenance for updates,
+upgrades, and priority technical support.
+
+NO WARRANTY: THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM,
+DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE,
+ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+
+For inquiries regarding the commercial license,
+please contact e-mail: nima.askari@gmail.com
+
+Copyright (c) 2025 NimaLTD - Nima Askari  
+All rights reserved.  

@@ -1,38 +1,30 @@
-# TM1637 Display driver for STM32
+# SPI FLASH Library for STM32  
+---  
+## Please Do not Forget to get STAR, DONATE and support me on social networks. Thank you. :sparkling_heart:  
+---   
+-  Author:     Nima Askari  
+-  Github:     https://www.github.com/NimaLTD
+-  Youtube:    https://www.youtube.com/@nimaltd  
+-  LinkedIn:   https://www.linkedin.com/in/nimaltd  
+-  Instagram:  https://instagram.com/github.NimaLTD  
+---  
+- I have tested on w25q64. please test other devices and tell me.
+---
+* Install Library from https://github.com/nimaltd/STM32-PACK/raw/main/SPIF/NimaLTD.I-CUBE-SPIF.pdsc
+* Add and enable it.
+* Enable SPI and a GPIO as output-pushpull (CS pin).Connect WP and HOLD to VCC.
+* Select 'Generate peripheral initialization as a pair of .c/.h files per peripheral' on the Code Generator Tab.
+* Generate Code.
+* Define a structure of `SPIF_HandleTypeDef`.
+* Call `SPIF_Init()` and enjoy.
+---
+# Watch the Video:
 
- *	WebSite:    https://www.github.com/NimaLTD
- *	Instagram:  https://www.instagram.com/github.NimaLTD
- *	LinkedIn:   https://www.linkedin.com/in/NimaLTD
- *	Youtube:    https://www.youtube.com/channel/UCUhY7qY1klJm1d2kulr9ckw
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=_baNId6cDi4"><img src="https://img.youtube.com/vi/_baNId6cDi4/0.jpg" alt="Video"></a>
+</div>
 
-How to use this Library:
-* Put all files into your project.
-* Set your Configuration in `tm1637_config.h`.
-* Select 2 pins on cubemx as gpio open drain.
-* Create a strcuture `tm1637_t your_struct`.
-* Call `tm1637_init()`.
+---
+The old Version: https://github.com/nimaltd/SPIF/archive/refs/tags/1.20.0.zip 
 
-example:
 
-```
-#include "tm1637.h"
-tm1637_t disp;
-
-const uint8_t seg_LOAD[4] =  {0x38, 0x5c, 0x77, 0x5e}; // display LOAD
-.
-.
-.
-int main()
-{
-  .
-  .
-  .
-  tm1637_init(&disp, CLK1_GPIO_Port, CLK1_Pin, DIO1_GPIO_Port, DIO1_Pin);
-  tm1637_write_segment(&disp, seg_LOAD, 4, 0);
-  HAL_Delay(1000);
-  tm1637_write_float(&disp, -1.23, 2, 0);
-  HAL_Delay(1000);
-  tm1637_write_int(&disp, 56, 0);
-}
-
-```
