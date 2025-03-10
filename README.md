@@ -37,6 +37,14 @@
 
 ---
 
+## Installation
+
+To install the package, add the following address to your STM32 package manager:
+
+```
+https://github.com/nimaltd/STM32-PACK/raw/main/NimaLTD.pidx
+```
+
 ## STM32CubeMX Configuration  
 
 Set **CLK (Clock)** and **DIO (Data I/O)** pins as:  
