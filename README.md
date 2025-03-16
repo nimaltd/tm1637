@@ -67,9 +67,12 @@ tm1637_t seg =
     .pin_clk = GPIO_PIN_1,
     .pin_data = GPIO_PIN_2,
 };
-.
-.
-.
 tm1637_init(&seg);
 tm1637_disp_str(&seg, "1234");
 ```
+
+# Watch the Video:
+
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=Fom88WRaH4o"><img src="https://img.youtube.com/vi/Fom88WRaH4o/0.jpg" alt="Video"></a>
+</div>
