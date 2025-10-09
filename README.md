@@ -39,7 +39,6 @@ Available in the official pack repo:
 
 1. **CLK (Clock) Pin** – Configure as **Output Open-Drain**  
 2. **DIO (Data I/O) Pin** – Configure as **Output Open-Drain**  
-3. Enable **HAL GPIO driver** in CubeMX  
 4. No timer or interrupt configuration is needed  
 
 ---
