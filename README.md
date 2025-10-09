@@ -39,7 +39,7 @@ Available in the official pack repo:
 
 1. **CLK (Clock) Pin** – Configure as **Output Open-Drain**  
 2. **DIO (Data I/O) Pin** – Configure as **Output Open-Drain**  
-4. No timer or interrupt configuration is needed  
+3. No timer or interrupt configuration is needed  
 
 ---
 
@@ -60,7 +60,9 @@ Available in the official pack repo:
 
 ## 🚀 Quick Start  
 
-### Set Large value to making sure for delay in 'tm1637_config.h' and then tune in to faster response.
+### Adjust delay
+To ensure latency in 'tm1637_config.h', set it to a large value and then adjust it for faster response.
+
 ```c
 TM1637_DELAY     10
 ```
