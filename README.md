@@ -43,6 +43,21 @@ Available in the official pack repo:
 
 ---
 
+### Pin Connections  
+
+| Display Segment | TM1637 Pin |
+|----------------|-----------|
+| A             | SEG1      |
+| B             | SEG2      |
+| C             | SEG3      |
+| D             | SEG4      |
+| E             | SEG5      |
+| F             | SEG6      |
+| G             | SEG7      |
+| . (Dot)       | SEG8      |
+
+---
+
 ## 🚀 Quick Start  
 
 ### Define and Initialize a Display  
