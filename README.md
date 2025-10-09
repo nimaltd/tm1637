@@ -60,6 +60,12 @@ Available in the official pack repo:
 
 ## 🚀 Quick Start  
 
+### Set Large value to making sure for delay in 'tm1637_config.h' and then tune in to faster response.
+```c
+TM1637_DELAY     10
+```
+
+
 ### Define and Initialize a Display  
 
 ```c
