@@ -1,9 +1,14 @@
 
 /*
- * @file        TM1637
+ * @file        tm1637.c
+ * @brief       tm1637 7seg driver
  * @author      Nima Askari
- * @version     2.0.0
+ * @version     3.0.0
  * @license     See the LICENSE file in the root folder.
+ *
+ * @note        All my libraries are dual-licensed.
+ *              Please review the licensing terms before using them.
+ *              For any inquiries, feel free to contact me.
  *
  * @github      https://www.github.com/nimaltd
  * @linkedin    https://www.linkedin.com/in/nimaltd
@@ -11,7 +16,6 @@
  * @instagram   https://instagram.com/github.nimaltd
  *
  * Copyright (C) 2025 Nima Askari - NimaLTD. All rights reserved.
- *
  */
 
 /*************************************************************************************************/
@@ -19,7 +23,7 @@
 /*************************************************************************************************/
 
 #include "tm1637.h"
-#include "NimaLTD.NimaLTD-TM1637_conf.h"
+#include "tm1637_config.h"
 
 /*************************************************************************************************/
 /** Macros and Definitions **/
@@ -32,12 +36,19 @@
 #define TM1637_SEG_MAX    6
 
 /*************************************************************************************************/
-/** Static Function Prototypes **/
+/** Private Function prototype **/
 /*************************************************************************************************/
 
+/* Delay for generating pulse */
 static void         tm1637_delay(void);
+
+/* Generate Start Signal */
 static void         tm1637_start(tm1637_t *handle);
+
+/* Generate Stop Signal */
 static void         tm1637_stop(tm1637_t *handle);
+
+/* Write data to chip */
 static tm1637_err_t tm1637_write(tm1637_t *handle, uint8_t data);
 
 /*************************************************************************************************/
@@ -47,24 +58,23 @@ static tm1637_err_t tm1637_write(tm1637_t *handle, uint8_t data);
 /*************************************************************************************************/
 /**
  * @brief Initializes the TM1637 display driver.
- *
  * @param[in] handle Pointer to the TM1637 handle structure.
- *
  * @return tm1637_err_t Error code indicating success or failure.
  */
 tm1637_err_t tm1637_init(tm1637_t *handle)
 {
   tm1637_err_t err;
   assert_param(handle != NULL);
-  assert_param(handle->mode <= TM1637_MODE_RIGHT_ALIG_WITH_ZERO);
-  assert_param(handle->max < 6);
-  assert_param(handle->max > 0);
   assert_param(IS_GPIO_PIN(pin_clk));
   assert_param(IS_GPIO_PIN(pin_dat));
   assert_param(handle->gpio_dat != NULL);
   assert_param(handle->gpio_clk != NULL);
+
+  /* Set All pins to high */
   handle->gpio_clk->BSRR = handle->pin_clk;
   handle->gpio_dat->BSRR = handle->pin_dat;
+
+  /* Send TM1637_COMM1 */
   tm1637_start(handle);
   err = tm1637_write(handle, TM1637_COMM1);
   tm1637_stop(handle);
@@ -74,21 +84,24 @@ tm1637_err_t tm1637_init(tm1637_t *handle)
 /*************************************************************************************************/
 /**
  * @brief Sets the brightness level of the TM1637 display.
- *
  * @param[in] handle Pointer to the TM1637 handle structure.
  * @param[in] brightness_0_8 Brightness level (0-8), where 0 turns off the display.
- *
  * @return tm1637_err_t Error code indicating success or failure.
  */
 tm1637_err_t tm1637_brightness(tm1637_t *handle, uint8_t brightness_0_8)
 {
   tm1637_err_t err;
+  assert_param(handle != NULL);
+
+  /* Map brightness */
   uint8_t tmp = brightness_0_8 > 8 ? 8 : brightness_0_8;
   tmp = (brightness_0_8 == 0) ? TM1637_COMM3_OFF : TM1637_COMM3_ON;
   if (brightness_0_8 > 0)
   {
     brightness_0_8--;
   }
+
+  /* Send Brightness */
   tm1637_start(handle);
   err = tm1637_write(handle, tmp | brightness_0_8);
   tm1637_stop(handle);
@@ -98,12 +111,14 @@ tm1637_err_t tm1637_brightness(tm1637_t *handle, uint8_t brightness_0_8)
 /*************************************************************************************************/
 /**
  * @brief Sets the number of 7-segment digits to be used on the TM1637 display.
- *
  * @param[in] handle Pointer to the TM1637 handle structure.
  * @param[in] seg_1_6 Number of segments (1-6). Values greater than 6 are capped at 6, and 0 is set to 1.
  */
 void tm1637_seg(tm1637_t *handle, uint8_t seg_1_6)
 {
+  assert_param(handle != NULL);
+
+  /* Set segment value */
   handle->seg_cnt = (seg_1_6 > 6) ? 6 : seg_1_6;
   handle->seg_cnt = (handle->seg_cnt == 0) ? 1 : handle->seg_cnt;
 }
@@ -111,21 +126,25 @@ void tm1637_seg(tm1637_t *handle, uint8_t seg_1_6)
 /*************************************************************************************************/
 /**
  * @brief Displays raw segment data on the TM1637 display.
- *
  * @param[in] handle Pointer to the TM1637 handle structure.
  * @param[in] data Pointer to an array containing raw segment data.
  *
  * @return tm1637_err_t Error code indicating success or failure.
  */
-tm1637_err_t tm1637_disp_raw(tm1637_t *handle, const uint8_t *data)
+tm1637_err_t tm1637_raw(tm1637_t *handle, const uint8_t *data)
 {
   tm1637_err_t err;
+  assert_param(handle != NULL);
+
+  /* Send TM1637_COMM2 */
   tm1637_start(handle);
   err = tm1637_write(handle, TM1637_COMM2);
   if (err != TM1637_ERR_NONE)
   {
     return TM1637_ERR_ERROR;
   }
+
+  /* Send all data */
   for (uint8_t i = 0; i < handle->seg_cnt; i++)
   {
     err = tm1637_write(handle, data[i]);
@@ -141,17 +160,17 @@ tm1637_err_t tm1637_disp_raw(tm1637_t *handle, const uint8_t *data)
 /*************************************************************************************************/
 /**
  * @brief Displays a string on the TM1637 7-segment display.
- *
  * @param[in] handle Pointer to the TM1637 handle structure.
  * @param[in] str Pointer to a null-terminated string to display.
  *               Supports numbers (0-9), letters (if enabled), '-' and '.' for decimal points.
- *
  * @return tm1637_err_t Error code indicating success or failure.
  */
-tm1637_err_t tm1637_disp_str(tm1637_t *handle, const char *str)
+tm1637_err_t tm1637_str(tm1637_t *handle, const char *str)
 {
   uint8_t buff[TM1637_SEG_MAX + 1] = {0};
   char *str_tmp = (char*)str;
+  assert_param(handle != NULL);
+
   for (int i = 0; i < handle->seg_cnt; i++)
   {
     switch (*str_tmp)
@@ -189,7 +208,7 @@ tm1637_err_t tm1637_disp_str(tm1637_t *handle, const char *str)
     case '-':
       buff[i] = 0x40;
       break;
-#if (TM1637_ENABLE_ALFABET == true)
+#if (TM1637_ENABLE_ALFABET == 1)
     case 'A':
     case 'a':
       buff[i] = 0x77;
@@ -282,22 +301,24 @@ tm1637_err_t tm1637_disp_str(tm1637_t *handle, const char *str)
     }
     str_tmp++;
   }
-  return tm1637_disp_raw(handle, buff);
+
+  /* Write to tm1637 */
+  return tm1637_raw(handle, buff);
 }
 
 /*************************************************************************************************/
 /**
  * @brief Displays a formatted string on the TM1637 7-segment display.
- *
  * @param[in] handle Pointer to the TM1637 handle structure.
  * @param[in] format Format string (printf-style) to display.
  * @param[in] ... Additional arguments for the formatted string.
- *
  * @return tm1637_err_t Error code indicating success or failure.
  */
-tm1637_err_t  tm1637_disp_printf(tm1637_t *handle, const char *format, ...)
+tm1637_err_t  tm1637_printf(tm1637_t *handle, const char *format, ...)
 {
   char buff[TM1637_SEG_MAX + 1] = {0};
+  assert_param(handle != NULL);
+
   va_list args;
   va_start(args, format);
   int chars_written = vsnprintf(buff, sizeof(buff), format, args);
@@ -306,37 +327,33 @@ tm1637_err_t  tm1637_disp_printf(tm1637_t *handle, const char *format, ...)
   {
     return TM1637_ERR_ERROR;
   }
-  return tm1637_disp_str(handle, buff);
+  return tm1637_str(handle, buff);
 }
 
 /*************************************************************************************************/
 /**
  * @brief Clears the TM1637 display by setting all segments to off.
- *
  * @param[in] handle Pointer to the TM1637 handle structure.
- *
  * @return tm1637_err_t Error code indicating success or failure.
  */
-tm1637_err_t tm1637_disp_clear(tm1637_t *handle)
+tm1637_err_t tm1637_clear(tm1637_t *handle)
 {
   const uint8_t buff[TM1637_SEG_MAX] = {0};
-  return tm1637_disp_raw(handle, buff);
+  assert_param(handle != NULL);
+
+  /* Write all 0 */
+  return tm1637_raw(handle, buff);
 }
 
 /*************************************************************************************************/
-/** Static Function Implementations **/
+/** Private Function Implementations **/
 /*************************************************************************************************/
 
 /*************************************************************************************************/
 /**
  * @brief Provides a delay for the TM1637 display operations.
- *
- * This function uses a simple loop to generate a delay for controlling the timing
- * of the TM1637 display operations.
- *
- * @param[in] None
- *
- * @return None
+ *        This function uses a simple loop to generate a delay for controlling the timing
+ *        of the TM1637 display operations.
  */
 static void tm1637_delay(void)
 {
@@ -349,19 +366,20 @@ static void tm1637_delay(void)
 /*************************************************************************************************/
 /**
  * @brief Generates a start condition for the TM1637 communication.
- *
- * This function generates a start condition by toggling the clock and data lines.
- * The start condition is necessary to begin communication with the TM1637 display.
- *
+ *        This function generates a start condition by toggling the clock and data lines.
+ *        The start condition is necessary to begin communication with the TM1637 display.
  * @param[in] handle Pointer to the TM1637 handle structure.
- *
- * @return None
  */
 static void tm1637_start(tm1637_t *handle)
 {
+  assert_param(handle != NULL);
+
+  /* Raise CLK/DAT high */
   handle->gpio_clk->BSRR = handle->pin_clk;
   handle->gpio_dat->BSRR = handle->pin_dat;
   tm1637_delay();
+
+  /* Pull DAT low to start */
   handle->gpio_dat->BSRR = handle->pin_dat << 16;
   tm1637_delay();
 }
@@ -369,20 +387,23 @@ static void tm1637_start(tm1637_t *handle)
 /*************************************************************************************************/
 /**
  * @brief Generates a stop condition for the TM1637 communication.
- *
- * This function generates a stop condition by toggling the data and clock lines.
- * The stop condition signals the end of communication with the TM1637 display.
- *
+ *        This function generates a stop condition by toggling the data and clock lines.
+ *        The stop condition signals the end of communication with the TM1637 display.
  * @param[in] handle Pointer to the TM1637 handle structure.
- *
- * @return None
  */
 static void tm1637_stop(tm1637_t *handle)
 {
+  assert_param(handle != NULL);
+
+  /* Pull DAT low */
   handle->gpio_dat->BSRR = handle->pin_dat << 16;
   tm1637_delay();
+
+  /* Raise CLK high */
   handle->gpio_clk->BSRR = handle->pin_clk;
   tm1637_delay();
+
+  /* Release DAT high (STOP) */
   handle->gpio_dat->BSRR = handle->pin_dat;
   tm1637_delay();
 }
@@ -390,19 +411,19 @@ static void tm1637_stop(tm1637_t *handle)
 /*************************************************************************************************/
 /**
  * @brief Writes a byte of data to the TM1637 display.
- *
- * This function sends a single byte of data to the TM1637 display, bit by bit,
- * through the data and clock lines. It also handles the acknowledgment signal
- * from the TM1637 after sending the data.
- *
+ *        This function sends a single byte of data to the TM1637 display, bit by bit,
+ *        through the data and clock lines. It also handles the acknowledgment signal
+ *        from the TM1637 after sending the data.
  * @param[in] handle Pointer to the TM1637 handle structure.
  * @param[in] data The byte of data to send to the display.
- *
  * @return tm1637_err_t Error code indicating success or failure.
  */
 static tm1637_err_t tm1637_write(tm1637_t *handle, uint8_t data)
 {
   uint8_t tmp = data;
+  assert_param(handle != NULL);
+
+  /* Send each bit (LSB first) */
   for (int i = 0; i < 8; i++)
   {
     handle->gpio_clk->BSRR = handle->pin_clk << 16;
@@ -416,9 +437,13 @@ static tm1637_err_t tm1637_write(tm1637_t *handle, uint8_t data)
   handle->gpio_clk->BSRR = handle->pin_clk << 16;
   handle->gpio_dat->BSRR = handle->pin_dat;
   tm1637_delay();
+
+  /* Generate clock pulse for ACK phase */
   handle->gpio_clk->BSRR = handle->pin_clk;
   tm1637_delay();
   tm1637_delay();
+
+  /* Read ACK bit from TM1637 — data line is released and clock is toggled to sample response */
   tmp = (handle->gpio_dat->IDR & handle->pin_dat) ? 1 : 0;
   handle->gpio_dat->BSRR = (tmp == 0) ? (handle->pin_dat << 16) : handle->pin_dat;
   tm1637_delay();
