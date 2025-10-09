@@ -80,15 +80,6 @@ tm1637_str(&seg, "1234");
 
 ---
 
-## 🔧 Brightness & Segments  
-
-```c
-tm1637_brightness(&seg, 5);   // Set brightness (0–8)
-tm1637_seg(&seg, 6);          // Set number of active digits
-```
-
----
-
 ## 🧰 API Overview  
 
 | Function | Description |
