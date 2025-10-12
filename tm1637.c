@@ -243,7 +243,7 @@ tm1637_err_t tm1637_str(tm1637_t *handle, const char *str)
       break;
     case 'I':
     case 'i':
-      buff[i] = 0x06;
+      buff[i] = 0x04;
       break;
     case 'J':
     case 'j':
